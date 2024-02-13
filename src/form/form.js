@@ -4,6 +4,39 @@ import "./form.scss";
 const form = document.querySelector("form");
 const errorElement = document.querySelector("#errors");
 let errors = [];
+let articleId;
+
+const fillForm = (article)=>{
+  const author = document.querySelector('input[name="author"]');
+  const img = document.querySelector('input[name="img"]');
+  const category = document.querySelector('input[name="category"]');
+  const title = document.querySelector('input[name="title"]');
+  const content = document.querySelector("textarea");
+
+  author.value = article.author || "";
+  img.value = article.img || "";
+  category.value = article.category || "";
+  title.value = article.title || "";
+  content.value = article.content || "";
+
+}
+
+const initFormId = async()=>{
+  const url = new URL(location.href);
+  // console.log(url)
+  articleId = url.searchParams.get("id")
+try{
+  const response = await fetch(`https://restapi.fr/api/article/${articleId}`);
+  const article = await response.json();
+  console.log(article)
+  fillForm(article);
+}catch(e){
+  console.error("err :", e)
+}
+  
+}
+
+initFormId();
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -12,13 +45,29 @@ form.addEventListener("submit", async (event) => {
   if (formIsValid(article)) {
     try {
       const json = JSON.stringify(article);
-      const response = await fetch("https://restapi.fr/api/article", {
-        method: "POST",
-        body: json,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      let response;
+      if(articleId){
+         response = await fetch(`https://restapi.fr/api/article/${articleId}`, {
+           method: "PUT",
+           body: json,
+           headers: {
+             "Content-Type": "application/json",
+           },
+         });
+      } else{
+          response = await fetch("https://restapi.fr/api/article", {
+            method: "POST",
+            body: json,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+      }
+       
+
+      if(response.status< 299){
+        location.assign("../index.html");
+      }
       const body = await response.json();
       console.log(body);
     } catch (e) {

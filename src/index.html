@@ -1,32 +1,43 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Blog</title>
     <link
       href="https://fonts.googleapis.com/css?family=Muli:300,400,700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://kit.fontawesome.com/9654db2232.js" crossorigin="anonymous"></script>
+    <title>Blog</title>
     <script src="./index.js" type="module"></script>
   </head>
   <body>
     <div class="container">
       <header>
         <a class="header-brand" href="/">Blog</a>
-        <ul>
-          <li>
-            <a href="./index.html" class="header-nav active">Accueil</a>
-          </li>
-          <li>
-            <a href="./form/form.html" class="header-nav"
-              >Créer un article</a
-            >
-          </li>
-        </ul>
+        <div class="header-menu">
+          <ul>
+            <li>
+              <a href="./index.html" class="header-nav active">Accueil</a>
+            </li>
+            <li>
+              <a href="./form/form.html" class="header-nav">Créer un article</a>
+            </li>
+          </ul>
+          <div class="header-menu-icon">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+        </div>
       </header>
       <div class="content">
+        <div class="sidebar">
+          <ul class="categories">
+            <li>Histoire <strong>(1)</strong></li>
+            <li>Actualité <strong>(4)</strong></li>
+            <li> Sport <strong>(1)</strong></li>
+          </ul>
+        </div>
         <div class="articles-container"></div>
       </div>
       <footer>© blog</footer>

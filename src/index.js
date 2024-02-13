@@ -14,10 +14,25 @@ const articlesDOM = articles.map((article) =>{
               alt="profile"
             />
             <h2>${article.title}</h2>
-            <p class="article-author">${article.author} - ${article.category}</p>
+            <p class="article-author">${article.author} - ${
+      article.category
+    } </p>
+            <p class="article-author">${new Date(
+              article.createdAt
+            ).toLocaleDateString("fr-FR", {
+              weekday: "long",
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}</p>
             <p class="article-content">${article.content}</p>
             <div class="article-actions">
-              <button class="btn btn-danger" data-id="${article._id}">Supprimer</button>
+              <button class="btn btn-danger" data-id="${
+                article._id
+              }">Supprimer</button>
+              <button class="btn btn-primary" data-id="${
+                article._id
+              }">Modifier</button>
             </div>
     `;
     
@@ -27,8 +42,10 @@ const articlesDOM = articles.map((article) =>{
 articleContainerElement.innerHTML = "";
 articleContainerElement.append(...articlesDOM);
 const deleteBTN = articleContainerElement.querySelectorAll(".btn-danger");
+const btnUpdate = document.querySelectorAll(".btn-primary");
 
-console.log(deleteBTN);
+
+// console.log(btnUpdate);
 
 deleteBTN.forEach(button => {
     button.addEventListener("click", async (event)=>{
@@ -40,7 +57,7 @@ deleteBTN.forEach(button => {
          const response = await fetch(
            `https://restapi.fr/api/article/${articleId}`,
            {
-             method: "DELETE"
+             method: "DELETE" 
            }
          );
 
@@ -52,6 +69,13 @@ deleteBTN.forEach(button => {
         console.error("error: ", error)
        }
     })
+});
+
+btnUpdate.forEach(btn => {
+  btn.addEventListener("click", (event)=>{
+    const articleId = event.target.dataset.id;
+    location.assign(`./form/form.html?id=${articleId}`)
+  })
 });
 
 }
