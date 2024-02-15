@@ -1,10 +1,45 @@
 import "./assets/styles/styles.scss";
 import "/index.scss"
 
-const createArticles = (articles)=>{
+let articles;
+let filter;
+console.log(filter);
+
+const fetchArticle = async () => {
+  try {
+    const response = await fetch("https://restapi.fr/api/article");
+    articles = await response.json();
+    // console.log(articles)
+    createArticles();
+    createMenuArticles();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+fetchArticle();
+
+
+const createArticles = ()=>{
 const articleContainerElement = document.querySelector(".articles-container");
 
-const articlesDOM = articles.map((article) =>{
+// let filteredArticles = articles;
+
+// if (filter) {
+//     filteredArticles = articles.filter((article) => {
+//       return article.category === filter;
+//     });
+  
+// }
+
+
+const articlesDOM = articles.filter(article =>{
+  if(filter){
+      return article.category === filter;
+  } else{
+    return true;
+  }
+}).map((article) =>{
     const articleDOM = document.createElement("div");
     articleDOM.classList.add("article")
     articleDOM.innerHTML = `
@@ -39,8 +74,11 @@ const articlesDOM = articles.map((article) =>{
     return articleDOM;
 
 })
+
+
 articleContainerElement.innerHTML = "";
 articleContainerElement.append(...articlesDOM);
+
 const deleteBTN = articleContainerElement.querySelectorAll(".btn-danger");
 const btnUpdate = document.querySelectorAll(".btn-primary");
 
@@ -80,17 +118,55 @@ btnUpdate.forEach(btn => {
 
 }
 
+const displayMenuCategories = categoriesArr =>{
+  const categorieContainer = document.querySelector(".categories");
+  const liElements = categoriesArr.map(categorie => {
+    const li = document.createElement("li");
+    li.innerHTML = `<li>${categorie[0]} (<strong>${categorie[1]}</strong>)</li>`;
+  
+    li.addEventListener("click", ()=>{
+      if(filter=== categorie[0]){
+        filter = null;
+        li.classList.remove("active")
+        createArticles()
+      }
+      else{
+        filter = categorie[0];
+        createArticles();
+        liElements.forEach((li) => {
+          li.classList.remove("active");
+        });
+        li.classList.add("active");
+      }
+      
+    })
+    return li;
+  }
+  );
+  //  console.log(liElements)
 
-const  fetchArticle = async()=>{
-    try{
-        const response = await fetch("https://restapi.fr/api/article");
-        const articles = await response.json();
-        console.log(articles)
-        createArticles(articles)
-    }catch(e){
-        console.error(e)
-    }
+  categorieContainer.innerHTML = "";
+  categorieContainer.append(...liElements); 
 
+  
 }
 
-fetchArticle();
+const createMenuArticles = () =>{
+  // console.log(articles);
+
+  const categories = articles.reduce((acc,article)=> {
+
+    if(acc[article.category]){
+      acc[article.category]++;
+    }else{
+      acc[article.category] = 1;
+    }
+    return acc;
+  }, {})
+
+  // console.log(categories);
+
+  const categoriesArr = Object.entries(categories);
+  displayMenuCategories(categoriesArr);
+  // console.log(categoriesArr);
+}
