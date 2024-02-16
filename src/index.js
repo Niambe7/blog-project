@@ -3,11 +3,21 @@ import "/index.scss"
 
 let articles;
 let filter;
-console.log(filter);
+let sortedBy= "desc" ;
+let select = document.querySelector("select");
+console.log(sortedBy);
+
+select.addEventListener("change", ()=>{
+  sortedBy = select.value;
+  fetchArticle()
+  // console.log(sortedBy);
+})
 
 const fetchArticle = async () => {
   try {
-    const response = await fetch("https://restapi.fr/api/article");
+    const response = await fetch(
+      `https://restapi.fr/api/article?sort=createdAt:${sortedBy}`
+    );
     articles = await response.json();
     // console.log(articles)
     createArticles();
@@ -167,6 +177,10 @@ const createMenuArticles = () =>{
   // console.log(categories);
 
   const categoriesArr = Object.entries(categories);
+  categoriesArr.sort((a,b)=>{
+    return a[0] - b[0]
+  })
+  
   displayMenuCategories(categoriesArr);
   // console.log(categoriesArr);
 }
