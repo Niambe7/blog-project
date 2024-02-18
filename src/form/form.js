@@ -1,7 +1,10 @@
 import "../assets/styles/styles.scss";
 import "./form.scss";
 
+import { openModal } from "../assets/javascripts/modal";
+
 const form = document.querySelector("form");
+const cancel = document.querySelector(".btn-secondary");
 const errorElement = document.querySelector("#errors");
 let errors = [];
 let articleId;
@@ -37,6 +40,13 @@ try{
 }
 
 initFormId();
+
+cancel.addEventListener("click", async ()=>{
+  const result = await openModal("Si vous quittez La page vous allez perdre vos données déja insérées");
+  if(result === true){
+    location.assign("../index.html");
+  }
+})
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -1,5 +1,10 @@
+// Files Imports
 import "./assets/styles/styles.scss";
 import "/index.scss"
+
+// Functions Imports
+import {openModal} from "./assets/javascripts/modal"
+
 
 let articles;
 let filter;
@@ -99,23 +104,24 @@ deleteBTN.forEach(button => {
     button.addEventListener("click", async (event)=>{
         let target = event.target;
         let articleId = target.dataset.id;
-        console.log(articleId)
 
-       try{
-         const response = await fetch(
-           `https://restapi.fr/api/article/${articleId}`,
-           {
-             method: "DELETE" 
+       const result = await openModal("Etes vous sure de vouloir supprimer cet article");
+        if(result === true){
+           try{
+             const response = await fetch(
+               `https://restapi.fr/api/article/${articleId}`,
+               {
+                 method: "DELETE"
+               }
+             );
+             const body = await response.json();
+             console.log(body)
+             fetchArticle();
            }
-         );
-
-         const body = await response.json();
-         console.log(body)
-         fetchArticle();
-       }
-       catch(error){
-        console.error("error: ", error)
-       }
+           catch(error){
+            console.error("error: ", error)
+           }
+        }
     })
 });
 
